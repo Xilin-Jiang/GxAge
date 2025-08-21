@@ -1,7 +1,7 @@
 source("GxAge_functions.R")
 dir.create("Figures")
 #######################################################################################
-# Figure 3B
+# Figure 4B
 #######################################################################################
 
 # part 1: EA incident case prediction model
@@ -292,7 +292,7 @@ ggsave(paste0("Figures/simulation_incidentPredictionVSprevelanceAssociation_logO
 
 
 #######################################################################################
-# Figure 3C
+# Figure 4C
 #######################################################################################
 library(data.table)
 h2g_list <- c(0.05, 0.2, 0.5, 0.99)
