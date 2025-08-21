@@ -10,6 +10,24 @@ We provides three scripts:
 - `QuantitativeTraitsAnalaysis.R` contains all code that estimate age-dependent genetic and environment variance from summary level data. We can not share the analyses on individual-level data.
 - `Binary_traits.R` contains all code that estimate age-dependent prediction accuracy from summary level data. We can not share the analyses on individual-level data.
 
+## We is age-dependent diseaes architecture?
+Our analysis focus on both the genetics (**G**) and environment (**E**) components of complex traits and diseases. 
+Previous analysis focuses on **GxAge**, while here we analyse both  **GxAge** and **ExAge**. In fact, the main
+mechanism we find is ***Exposure Accumulation***, which won't even be detected as **GxAge** in previous analysis (e.g. Robinson et al. 2017 *Nature Genetics*.)
+
+We enjoy reading Miao et al. 2025 *Nature Human Behavior* which provides comprehensive description of different **GxE** models (Table 1 of Miao et al.); most of these 
+models can be extend to by setting **Age = E**. Therefore, we focus on mechanism that are unique to **Age** and only listed different models of **GxAge** as secondary analyses. 
+
+To provide the intuition of why analysing **G** and  **E** components of complex traits is important, we can use following schematic figure for liability-threshold model: 
+![My Image](Schematic.png)
+
+In this figure, disease liability is the sum of the **G** and  **E** components. As age increases, more individuals are getting the diseases by passing the threshold.
+- **G** and  **E** variance both can change with age, even if only **E** variance increase with age and **G** variance remain constant, the heritability of disease liability will change with age.
+- for disease prediction, removing *prevalent cases* will crease negative correlation between **G** and  **E**, which reduce the prediction power for but **G** and  **E**. 
+
+In this work we first estimate age dependent profiles of **G** and  **E** variance to show that evironment exposure generally accumulate with age. Then we move to show
+how this impact prediction accuracy of both genetic and non-genetic predictors. 
+
 ## Estimating age-dependent prediction accuracy
 After cloning this repository or just download the `GxAge_functions.R` files if you don't need to see the example data, you can run following code to estimate age-dependent prediction accuracy.
 
