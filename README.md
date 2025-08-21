@@ -10,7 +10,7 @@ We provides three scripts:
 - `QuantitativeTraitsAnalaysis.R` contains all code that estimate age-dependent genetic and environment variance from summary level data. We can not share the analyses on individual-level data.
 - `Binary_traits.R` contains all code that estimate age-dependent prediction accuracy from summary level data. We can not share the analyses on individual-level data.
 
-## We is age-dependent diseaes architecture?
+## What is age-dependent diseaes architecture?
 Our analysis focus on both the genetics (**G**) and environment (**E**) components of complex traits and diseases. 
 Previous analysis focuses on **GxAge**, while here we analyse both  **GxAge** and **ExAge**. In fact, the main
 mechanism we find is ***Exposure Accumulation***, which won't even be detected as **GxAge** in previous analysis (e.g. Robinson et al. 2017 *Nature Genetics*.)

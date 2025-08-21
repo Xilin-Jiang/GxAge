@@ -1,0 +1,9 @@
+t2d
+hyperchol
+hypertension
+obesity
+CAD
+COPD
+asthma
+anemia
+highlipid
