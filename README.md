@@ -1,11 +1,11 @@
 ## Age-dependent diseaes architecture
 
-In this document we include all summary data and code that allows you to replicate main results of the [Jiang...Durvasula]().  
+In this document we include all summary data and code that allow you to replicate main results of [Jiang...Durvasula]().  
 
-I would usually write a R package for my code. However, this project contains multiple parts that are not methodology focused, so we decided it is better to put all pipelines 
-as Scripts to increase readability. We do provide a simple [function wrapper](#Estimating-age-dependent-prediction-accuracy) with example data for estimating age variation of prediction accuracy of a risk score, see below. 
+I would usually write an R package. However, this project contains multiple parts that are not methodology focused, so we decided it is better to put all pipelines 
+as Scripts to increase readability. We do provide a simple [function wrapper](#Estimating-age-dependent-prediction-accuracy) with example data for estimating age variation of prediction accuracy for a risk score, see below. 
 
-We provides three scripts:
+We provide three scripts:
 - `simulations_GxAge.R`  contains all code that can replicate our simulations.
 - `QuantitativeTraitsAnalaysis.R` contains all code that estimate age-dependent genetic and environment variance from summary level data. We can not share the analyses on individual-level data.
 - `Binary_traits.R` contains all code that estimate age-dependent prediction accuracy from summary level data. We can not share the analyses on individual-level data.
@@ -29,14 +29,30 @@ In this work we first estimate age dependent profiles of **G** and  **E** varian
 how this impact prediction accuracy of both genetic and non-genetic predictors. 
 
 ## Estimating age-dependent prediction accuracy
-After cloning this repository or just download the `GxAge_functions.R` files if you don't need to see the example data, you can run following code to estimate age-dependent prediction accuracy.
+After cloning this repository or just download the `GxAge_functions.R` files if you don't need to test with the example data, you can run following code to estimate age-dependent prediction accuracy.
+
+The function does five things:
+
+- First, divide the cases into five age quintiles.
+- Second, create case-control set for each age quintiles so that the case-control ratio and number of 
+samples are the same for each age quintile.
+- Third, regression out age, sex, covariates from the RiskScore, estimate square of correlation for each age quintiles.
+- Fourth, fitting a models of linear age effect on the square of correlations (median age of each quintile will be used) and test agains a model with constant effect across quintiles; test will be
+a likelihood ratio test for nested models.
+- Fifth, bootstrapping across individuals and repeat the procedure to get se of age effect estimates.
 
 ```r
-source(GxAge_functions.R)
-example_data <- fread("Summary_data/example_RiskScore_age_data.txt")
 source("GxAge_functions.R")
-results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T)
-print(paste0("per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
+example_data <- fread("Summary_data/example_RiskScore_age_data.txt")
+# using flag_remove_prevalent_cases=T to perform incident case prediction
+results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T, 
+                                          flag_remove_prevalent_cases = T)
+print(paste0("Incident case prediction per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
+             " z-score = ", results[[2]]$slope_zscore))
+# using flag_remove_prevalent_cases=F to perform prevalent case association
+results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T, 
+                                          flag_remove_prevalent_cases = F)
+print(paste0("Prevalent case association per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
              " z-score = ", results[[2]]$slope_zscore))
 ```
 

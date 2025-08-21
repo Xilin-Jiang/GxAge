@@ -146,7 +146,7 @@ slope_collider <- function(interval_censored_df){
 
     # compute cases that are prevelant
     prevelant_diseae_proportion <- c(prevelant_diseae_proportion, mean(interval_surv_data_cases$prevelant_disease))
-    age_diff_liability_case <- c(age_diff_liability_case, mean(interval_surv_data_cases$age_decimal - interval_surv_data_cases$age_liability))
+    age_diff_liability_case <- c(age_diff_liability_case, mean(interval_surv_data_cases$age_decimal - interval_surv_data_cases$age_risk_measure))
   }
   liability_binary_R2_each_age <- data.table(age_bin_idx = 1:5, observed_R2,
                                              observed_R2_se,
@@ -198,7 +198,9 @@ slope_collider <- function(interval_censored_df){
                               all_observed_R2, all_observed_R2_se)
   return(list(liability_binary_R2_each_age, slope_results))
 }
-Prediction_R2_Slope_per10years <- function(longitidinal_disease_RiskScore_data, flag_normal_transform_RiskScore = T){
+Prediction_R2_Slope_per10years <- function(longitidinal_disease_RiskScore_data,
+                                           flag_normal_transform_RiskScore = T,
+                                           flag_remove_prevalent_cases = T){
   # controlling the covariates
   # Note age of Risk Scores has to be regressed out as under liability-threshold model, we are interested in the
   # non-age dependent component of risk score
@@ -219,6 +221,11 @@ Prediction_R2_Slope_per10years <- function(longitidinal_disease_RiskScore_data, 
     mutate(prevelant_disease = if_else(is.na(prevelant_disease), 0, prevelant_disease)) %>%
     mutate(disease = replace_na(disease, 0), age_decimal = if_else(is.na(age_diag), censor_age, age_diag)) %>%
     select(- age_diag, -disease_age)
+
+  if(flag_remove_prevalent_cases){
+    longitidinal_disease_RiskScore_data <- longitidinal_disease_RiskScore_data %>%
+      filter(prevelant_disease == 0 )
+  }
 
   results <- slope_collider(longitidinal_disease_RiskScore_data)
   liability_binary_R2_each_age <- results[[1]]

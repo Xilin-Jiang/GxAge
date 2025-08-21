@@ -17,11 +17,19 @@
 # age_risk_measure: age when the risk score was estimated, will be regressed out from risk score; if not available, just put 0 for all
 # genetic_sex: genetic sex of the individual, will be regressed out from risk score; if not available, just put 0 for all
 # PC1:PC5: additional covariates that should be regressed out from risk score; if not available, just put 0 for all
+# flag_normal_transform_RiskScore: if True, transform RiskScore to a normal distribution
+# flag_remove_prevalent_cases: if True, remove prevalent cases which are defined as "age_diag<age_risk_measure"; default is T, but for PRS can set as F
 example_data <- fread("Summary_data/example_RiskScore_age_data.txt")
 
 source("GxAge_functions.R")
-results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T)
-print(paste0("per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
+results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T,
+                                          flag_remove_prevalent_cases = T)
+print(paste0("Incident case prediction per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
+             " z-score = ", results[[2]]$slope_zscore))
+
+results <- Prediction_R2_Slope_per10years(example_data, flag_normal_transform_RiskScore = T,
+                                          flag_remove_prevalent_cases = F)
+print(paste0("Prevalent case association per 10 year change: ", results[[2]]$incident_R2_1to1_slope_10year,
              " z-score = ", results[[2]]$slope_zscore))
 
 ##########################################################
@@ -311,8 +319,8 @@ compute_incident_1to1_manyPredictor <- function(PRS_liatility_df,predictor_names
   prediction_R2 <- data.table(metric_name = c("overall_liab_R2", "prevelance_liab_R2", "incident_joint_1to1_R2" ), prediction_R2)
 
   # age-bin specific incident prediction
-  age_quintile <- quantile(interval_surv_data_cases$age_decimal, probs = seq(0,1,0.2))
-  age_median_quintile <- quantile(interval_surv_data_cases$age_decimal, probs = seq(0.1,1,0.2))
+  age_quintile <- quantile(interval_surv_data_cases$age_risk_measure, probs = seq(0,1,0.2))
+  age_median_quintile <- quantile(interval_surv_data_cases$age_risk_measure, probs = seq(0.1,1,0.2))
 
   Age_1to2_incident_R2 <- matrix(NA, nrow = 5, ncol = length(predictor_names))
   avg_incident_age <- c()
@@ -321,11 +329,11 @@ compute_incident_1to1_manyPredictor <- function(PRS_liatility_df,predictor_names
     age_start <- age_quintile[age_bin_idx]
     age_end <- age_quintile[age_bin_idx + 1]
     interval_data <-  incident_df %>%
-      filter(age_decimal >= age_start, age_decimal < age_end)
+      filter(age_risk_measure >= age_start, age_risk_measure < age_end)
 
     incident_age <- interval_data %>%
       filter(incident_disease == 1) %>%
-      mutate(incident_age = disease_age - age_decimal)
+      mutate(incident_age = disease_age - age_risk_measure)
     avg_incident_age <- c(avg_incident_age, mean(incident_age$incident_age))
 
     # sampling 1:1 case-controls
@@ -355,6 +363,5 @@ example_data_incident_only <- example_data %>%
   mutate(prevelant_disease = if_else(disease_age < age_risk_measure, 1, 0),
          incident_disease = if_else(disease_age >= age_risk_measure, 1, 0)) %>%
   mutate(prevelant_disease = if_else(is.na(prevelant_disease), 0, prevelant_disease),
-         incident_disease = if_else(is.na(incident_disease), 0, incident_disease)) %>%
-  rename(age_decimal = age_risk_measure)
+         incident_disease = if_else(is.na(incident_disease), 0, incident_disease))
 results <- compute_incident_1to1_manyPredictor(example_data_incident_only, c("RiskScore", "PC1") )
