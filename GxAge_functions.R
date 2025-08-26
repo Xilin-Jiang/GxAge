@@ -1,3 +1,13 @@
+# install the packages --- this is the disadvantage of not compiling everything into an R package...
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("stringr")
+install.packages("mvtnorm")
+install.packages("survival")
+install.packages("data.table")
+install.packages("dplyr")
+
 library(ggplot2)
 library(dplyr)
 library(tidyr)
