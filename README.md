@@ -1,7 +1,7 @@
 ## Age-dependent diseases architecture
 
 This repository provides code and summary data for analysing age-dependent disease architecture, focusing on the genetic (**G**) and environmental (**E**) contributions to complex traits and diseases. It includes simulations, quantitative trait analyses, and binary trait analyses, along with example functions to estimate age-dependent prediction accuracy.
-We include all summary data and code that allow you to replicate main results of [Jiang...Durvasula]().
+We include all summary data and code that allow you to replicate main results of [Jiang, X., Price, A. L., Danesh, J., McVean, G., Inouye, M., Urbut, S., & Durvasula, A. (2025). Exposure accumulation drives age-dependent disease architectures and polygenic risk scores. medRxiv.](https://doi.org/10.1101/2025.08.29.25334745).
 
 Normally, I would write an R package. However, this project contains multiple parts that are not focused on methodology, so we decided it is better to provide all pipelines as scripts for readability. We do provide a simple [function wrapper](#Estimating-age-dependent-prediction-accuracy) with example data for estimating the age variation of prediction accuracy for a risk score. See below for details.
 
@@ -131,7 +131,7 @@ The beginning parts provide example data that users can follow to estimate age-d
 ---
 
 ## Citation
-If you use this code, please cite: [Jiang…Durvasula]().
+If you use this code, please cite: [Jiang, X., Price, A. L., Danesh, J., McVean, G., Inouye, M., Urbut, S., & Durvasula, A. (2025). Exposure accumulation drives age-dependent disease architectures and polygenic risk scores. medRxiv.](https://doi.org/10.1101/2025.08.29.25334745).
 
 ---
 
